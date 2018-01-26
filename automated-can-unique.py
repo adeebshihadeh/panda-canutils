@@ -15,4 +15,4 @@ try:
     os.remove("output.csv")
 except KeyboardInterrupt:
   os.remove("background.csv")
-
+  sys.exit(0)
