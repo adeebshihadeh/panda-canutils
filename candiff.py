@@ -9,9 +9,9 @@ unplugged = []
 try:
   while True:
     data = panda.can_recv()
-    for msg in data:
-      if list(msg)[0] not in unplugged:
-        unplugged.append(list(msg)[0]) 
+    for addr, _, dat, bus in data:
+      if hex(addr) not in unplugged:
+        unplugged.append(hex(addr)) 
 except KeyboardInterrupt:
   pass
 
@@ -19,10 +19,11 @@ raw_input("plug in ecu and press any key to start logging")
 
 try:
   while True:
-   for msg in panda.can_recv():
-    if list(msg)[0] not in unplugged:
-      print list(msg)
-      unplugged.append(list(msg)[0])
-      #print "found addr: %s on bus: %d"  % (list(msg)[0], list(msg)[4])
+    data = panda.can_recv()
+    for addr, _, dat, bus in data:
+      if hex(addr) not in unplugged:
+        print hex(addr)
+        unplugged.append(hex(addr))
+        print "found addr %s on bus %d"  % (str(hex(addr)), bus)
 except KeyboardInterrupt:
   pass
