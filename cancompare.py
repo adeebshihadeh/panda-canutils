@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import sys
 from itertools import izip_longest
 
@@ -26,12 +28,12 @@ def can_compare(log1, log2):
   print "-"*20
 
   for s, l1, l2 in izip_longest(shared, log1, log2):
-    print "{0}\t{1}\t{2}".format(s, l1, l2)
+    print "{0}\t{1}\t{2}".format(s, l1 or "", l2 or "")
 
 if __name__ == "__main__":
   if len(sys.argv) < 2:
     print "usage: python cancompare.py <log 1> <log 2>"
-    print "\texport csv files from cabana"
+    print "\n\texport csv files from cabana"
     print "\twarning: cancompare ignores bus number"
     sys.exit()
 
