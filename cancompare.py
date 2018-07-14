@@ -1,12 +1,11 @@
 #!/usr/bin/env python2
 
 import sys
-from re import findall
 from binascii import hexlify
 from itertools import izip_longest
 
 def get_bits(b):
-  b = findall("..", b)
+  b = map(''.join, zip(*[iter(b)]*2))
   ret = list()
 
   for byte in b:
@@ -69,7 +68,7 @@ def bit_diff(log1, log2):
       if seen[0][addr][i] != seen[1][addr][i]:
         bits.append(str(i))
     if len(bits):
-      print "diff on addr", addr, "\n   bits", ', '.join(bits)
+      print "diff on addr", hex(int(addr)), "\n   bits", ', '.join(bits)
 
 
 
