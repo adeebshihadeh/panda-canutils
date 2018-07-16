@@ -6,14 +6,13 @@ from itertools import izip_longest
 
 def get_bits(b):
   b = map(''.join, zip(*[iter(b)]*2))
-  ret = list()
+  ret = []
 
   for byte in b:
-    ret += list(bin(int(byte, base=16))[2:].zfill(8))
+    ret.append(list(bin(int(byte, base=16))[2:].zfill(8)))
 
   return ret
 
-# id compare
 def id_diff(log1, log2):
   log1 = log1[1:]
   log1 = [l.split(",")[1] for l in log1 if len(l.split(",")) == 4]
@@ -57,7 +56,7 @@ def bit_diff(log1, log2):
           for i in range(len(bits)):
             if messages[addr][i] != 2:
               messages[addr][i] = 2 if messages[addr][i] != bits[i] else bits[i]
-    seen.append(messages)
+    seen.append(dict(sorted(messages.items())))
 
   for addr in seen[0]:
     if addr not in seen[1]:
@@ -75,9 +74,9 @@ def bit_diff(log1, log2):
 if __name__ == "__main__":
   if len(sys.argv) < 2:
     print "usage: python cancompare.py <log 1> <log 2>"
-    print "\n\texport csv files from cabana"
-    print "\tadd --bits arg at the end to run a diff on the bits instead of the ids"
-    print "\twarning: cancompare ignores bus number"
+    print "\nlogs are exported from cabana"
+    print "add --bits arg at the end to run a diff on the bits instead of the ids"
+    print "**warning** cancompare ignores bus number"
     sys.exit()
 
   csv1 = open(sys.argv[1]).readlines()
