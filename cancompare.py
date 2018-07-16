@@ -9,7 +9,7 @@ def get_bits(b):
   ret = []
 
   for byte in b:
-    ret.append(list(bin(int(byte, base=16))[2:].zfill(8)))
+    ret += list(bin(int(byte, base=16))[2:].zfill(8))
 
   return ret
 
