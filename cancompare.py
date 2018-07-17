@@ -35,7 +35,7 @@ def id_diff(log1, log2):
   print "-"*20
 
   for s, l1, l2 in izip_longest(shared, log1, log2):
-    print "{}\t{}\t{}".format(s, l1 or "", l2 or "")
+    print "{}\t{}\t{}".format("" if not s else hex(int(s)), "" if l1 is None else hex(int(l1)), "" if not l2 else hex(int(l2)))
 
 def bit_diff(log1, log2, save):
   seen = []
@@ -73,7 +73,7 @@ def bit_diff(log1, log2, save):
       for log in seen:
         f.write("{0} log {0}\n".format("="*10))
         for addr in log:
-          f.write("\t{}\n".format(addr))
+          f.write("\t{}\n".format(hex(int(addr))))
           for i in range(len(log[addr])/8):
             f.write("\t\t{}\n".format(" ".join(map(str, log[addr][i*8:i*8+8]))))
 
