@@ -64,7 +64,7 @@ def bit_diff(log1, log2, save):
     bits = []
     for i in range(len(seen[0][addr])):
       if seen[0][addr][i] != seen[1][addr][i]:
-        bits.append(str(i))
+        bits.append(str(i + 1))
     if len(bits):
       print "diff on addr", hex(int(addr)), "\n   bits", ', '.join(bits)
 
