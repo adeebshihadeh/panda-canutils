@@ -5,11 +5,10 @@ from binascii import hexlify
 from itertools import izip_longest
 
 def get_bits(b):
-  b = map(''.join, zip(*[iter(b)]*2))
   ret = []
 
-  for byte in b:
-    ret += list(bin(int(byte, base=16))[2:].zfill(8))
+  for i in xrange(0, len(b), 2):
+    ret += list(bin(int(b[i:i+2], base=16))[2:].zfill(8))
 
   return ret
 
@@ -36,9 +35,9 @@ def id_diff(log1, log2):
   print "-"*20
 
   for s, l1, l2 in izip_longest(shared, log1, log2):
-    print "{0}\t{1}\t{2}".format(s, l1 or "", l2 or "")
+    print "{}\t{}\t{}".format(s, l1 or "", l2 or "")
 
-def bit_diff(log1, log2):
+def bit_diff(log1, log2, save):
   seen = []
 
   for log in (log1, log2):
@@ -69,6 +68,15 @@ def bit_diff(log1, log2):
     if len(bits):
       print "diff on addr", hex(int(addr)), "\n   bits", ', '.join(bits)
 
+  if save:
+    with open("output", "w") as f:
+      for log in seen:
+        f.write("{0} log {0}\n".format("="*10))
+        for addr in log:
+          f.write("\t{}\n".format(addr))
+          for i in range(len(log[addr])/8):
+            f.write("\t\t{}\n".format(" ".join(map(str, log[addr][i*8:i*8+8]))))
+
 
 
 if __name__ == "__main__":
@@ -76,12 +84,13 @@ if __name__ == "__main__":
     print "usage: python cancompare.py <log 1> <log 2>"
     print "\nlogs are exported from cabana"
     print "add --bits arg at the end to run a diff on the bits instead of the ids"
+    print "add --save arg at the end to save the bit data for every message to an output file"
     print "**warning** cancompare ignores bus number"
     sys.exit()
 
   csv1 = open(sys.argv[1]).readlines()
   csv2 = open(sys.argv[2]).readlines()
   if "--bits" in sys.argv:
-    bit_diff(csv1, csv2)
+    bit_diff(csv1, csv2, "--save" in sys.argv)
   else:
     id_diff(csv1, csv2)
