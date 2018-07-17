@@ -3,8 +3,9 @@
 import sys
 from binascii import hexlify
 from itertools import izip_longest
+from multiprocessing import Pool
 
-def get_bits(b):
+def bytes_to_bits(b):
   ret = []
 
   for i in xrange(0, len(b), 2):
@@ -37,25 +38,27 @@ def id_diff(log1, log2):
   for s, l1, l2 in izip_longest(shared, log1, log2):
     print "{}\t{}\t{}".format("" if not s else hex(int(s)), "" if l1 is None else hex(int(l1)), "" if not l2 else hex(int(l2)))
 
+def get_bits(log):
+  messages = {}
+  for line in log[1:]:
+    line = line.strip().split(",")[1:]
+
+    if len(line) == 3:
+      addr, _, b = line
+
+      if addr not in messages:
+        messages[addr] = bytes_to_bits(b)
+      else:
+        bits = bytes_to_bits(b)
+        for i in range(len(bits)):
+          if messages[addr][i] != 2:
+            messages[addr][i] = 2 if messages[addr][i] != bits[i] else bits[i]
+  return dict(sorted(messages.items()))
+
 def bit_diff(log1, log2, save):
-  seen = []
+  pool = Pool()
 
-  for log in (log1, log2):
-    messages = {}
-    for line in log[1:]:
-      line = line.strip().split(",")[1:]
-
-      if len(line) == 3:
-        addr, _, b = line
-
-        if addr not in messages:
-          messages[addr] = get_bits(b)
-        else:
-          bits = get_bits(b)
-          for i in range(len(bits)):
-            if messages[addr][i] != 2:
-              messages[addr][i] = 2 if messages[addr][i] != bits[i] else bits[i]
-    seen.append(dict(sorted(messages.items())))
+  seen = pool.map(get_bits, [log1, log2])
 
   for addr in seen[0]:
     if addr not in seen[1]:
