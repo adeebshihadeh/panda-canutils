@@ -31,7 +31,7 @@ raw_input("press any key to start logging again")
 try:
   while True:
     data = panda.can_recv()
-    
+
     for addr, _, dat, src in data:
       bits = get_bits(dat)
       for i in range(len(dat)):

@@ -28,8 +28,8 @@ def id_diff(log1, log2):
   log2 = [i for i in log2 if i not in shared]
 
   print len(shared), "shared"
-  print len(log1), "only in log 1"
-  print len(log2), "only in log 2"
+  print len(log1), "only in log1"
+  print len(log2), "only in log2"
 
   print "-"*20
   print "shared\tlog1\tlog2"
