@@ -19,5 +19,6 @@ with open(sys.argv[1].split(".csv")[0] + "_trimmed.csv", "w") as f:
     except:
       continue
     if t >= start and t <= stop:
-      print t
       f.write(log[i])
+    elif t > stop:
+      break
