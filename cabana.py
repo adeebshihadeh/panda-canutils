@@ -4,7 +4,6 @@
 # string of bytes to list of bits
 def get_bits(b):
   ret = []
-  print(len(b))
   for i in range(0, len(b), 2):
     ret += list(bin(int(b[i:i+2], base=16))[2:].zfill(8))
   return ret
@@ -58,7 +57,7 @@ class Log:
         ret[addr] = bits
       else:
         for i, b in enumerate(bits):
-          ret[addr][i] = '2' if ret[addr][i] != b else ret[addr][i]
+          ret[addr][i] = 2 if ret[addr][i] != b else ret[addr][i]
     return ret
 
   def get_raw_lines(self):

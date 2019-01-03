@@ -19,4 +19,4 @@ if __name__ == "__main__":
   for k, v in diff.items():
     print(hex(k))
     for i in range(0, len(v), 8):
-      print("\t"  + str(v[i:i+8]))
+      print("\t"  + str([int(n) for n in v[i:i+8]]))
