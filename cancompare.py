@@ -9,20 +9,25 @@ def safe_hex(a):
 
 # compare the addrs between two logs
 def addr_diff(log1, log2):
-  addrs1 = sorted(log1.get_addrs().keys())
-  addrs2 = sorted(log2.get_addrs().keys())
+  for bus in  [0, 1, 2, 128, 129, 130]:
+    addrs1 = sorted(log1.get_addrs_on_bus(bus).keys())
+    addrs2 = sorted(log2.get_addrs_on_bus(bus).keys())
 
-  shared = [int(i) for i in addrs1 if i in addrs2]
-  addrs1 = [int(i) for i in addrs1 if i not in shared]
-  addrs2 = [int(i) for i in addrs2 if i not in shared]
+    shared = [int(i) for i in addrs1 if i in addrs2]
+    addrs1 = [int(i) for i in addrs1 if i not in shared]
+    addrs2 = [int(i) for i in addrs2 if i not in shared]
 
-  print len(shared), "shared"
-  print len(addrs1), "only in log1"
-  print len(addrs2), "only in log2"
+    # dont print if no msgs on bus
+    if not(len(shared) or len(addrs1) or len(addrs2)): continue
 
-  print "-"*20, "\nshared\tlog1\tlog2\n", "-"*20
-  for s, l1, l2 in izip_longest(shared, addrs1, addrs2, fillvalue=""):
-    print safe_hex(s), "\t", safe_hex(l1), "\t", safe_hex(l2)
+    print "*"*10, "bus", bus, "*"*10
+    print len(shared), "shared"
+    print len(addrs1), "only in log1"
+    print len(addrs2), "only in log2"
+
+    print "-"*20, "\nshared\tlog1\tlog2\n", "-"*20
+    for s, l1, l2 in izip_longest(shared, addrs1, addrs2, fillvalue=""):
+      print safe_hex(s), "\t", safe_hex(l1), "\t", safe_hex(l2)
 
 # only outputs diff on addresses that appear in both logs
 def bit_diff(log1, log2):
@@ -44,7 +49,7 @@ if __name__ == "__main__":
     print "usage: python cancompare.py <log 1> <log 2>"
     print "\nlogs are exported from cabana"
     print "add --bits arg at the end to run a diff on the bits instead of the addresses"
-    print "**warning** cancompare ignores bus number"
+    print "add --bus arg at the end to differentiate betwween bus in addr mode"
     exit(-1)
 
   log1 = Log(open(sys.argv[1]).read())

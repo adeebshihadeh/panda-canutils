@@ -1,4 +1,4 @@
-# parse logs exported from cabana 
+# parse logs exported from cabana
 
 
 # string of bytes to list of bits
@@ -12,11 +12,11 @@ def get_bits(b):
 class Log:
   def __init__(self, csv):
     self.csv = csv
-    
+
     csv = csv.split("\n")
     self.header = csv[0]
-    self.data = csv[1:] 
-  
+    self.data = csv[1:]
+
     self.parsed = None
 
   def get_header(self):
@@ -31,6 +31,15 @@ class Log:
       ret[msg[1]] = 1 + ret.get(msg[1], 0)
     return ret
 
+  # same as get_addrs() but only for specified bus
+  def get_addrs_on_bus(self, bus=0):
+    log = self.get_full_log()
+    ret = {}
+    for t, addr, b, _ in log:
+      if b == bus:
+        ret[addr] = 1 + ret.get(addr, 0)
+    return ret
+
   # list of msgs, each msg is a list of format:
   # [time, addr, bus, dat]
   def get_full_log(self):
@@ -43,7 +52,7 @@ class Log:
       time, addr, bus, dat = line
       log.append((float(time), int(addr), int(bus), dat))
     self.parsed = log
-    return self.parsed 
+    return self.parsed
 
   # optionally specify addrs, else return diff on all addrs
   def get_bit_diff(self, addrs=None):
