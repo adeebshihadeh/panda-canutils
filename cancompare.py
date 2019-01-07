@@ -35,7 +35,7 @@ def bit_diff(log1, log2):
 
     diff = []
     for i, b in enumerate(bits):
-      if b != diff2[addr][i]: diff.append(str(i+1))
+      if b != diff2[addr][i]: diff.append(str(i))
     if len(diff):
       print "diff on addr", hex(addr), "\n\tbits", ", ".join(diff)
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
   if len(sys.argv) < 2:
     print "usage: python cancompare.py <log 1> <log 2>"
     print "\nlogs are exported from cabana"
-    print "add --bits arg at the end to run a diff on the bits instead of the addrs"
+    print "add --bits arg at the end to run a diff on the bits instead of the addresses"
     print "**warning** cancompare ignores bus number"
     exit(-1)
 
