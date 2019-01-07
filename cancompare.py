@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
 
+# compare two can logs exported from cabana
+
 import sys
 from itertools import izip_longest
 from cabana import Log
