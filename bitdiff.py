@@ -13,7 +13,7 @@ if __name__ == "__main__":
     exit(0)
 
   log = Log(open(sys.argv[1]).read())
-a:
+  
   bus = 0
   if "--bus" in sys.argv:
     bus = int(sys.argv.pop(sys.argv.index("--bus")+1))

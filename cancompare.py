@@ -33,18 +33,20 @@ def addr_diff(log1, log2):
 
 # only outputs diff on addresses that appear in both logs
 def bit_diff(log1, log2):
-  diff1 = log1.get_bit_diff()
-  diff2 = log2.get_bit_diff()
+  for bus in [0, 1, 2, 128, 129, 130]:
+    diff1 = log1.get_bit_diff_on_bus(bus=bus)
+    diff2 = log2.get_bit_diff_on_bus(bus=bus)
+  
+    print "*"*10, "bus", bus, "*"*10
+    for addr, bits in sorted(diff1.iteritems()):
+      if addr not in diff2:
+        continue
 
-  for addr, bits in sorted(diff1.iteritems()):
-    if addr not in diff2:
-      continue
-
-    diff = []
-    for i, b in enumerate(bits):
-      if b != diff2[addr][i]: diff.append(str(i))
-    if len(diff):
-      print "diff on addr", hex(addr), "\n\tbits", ", ".join(diff)
+      diff = []
+      for i, b in enumerate(bits):
+        if b != diff2[addr][i]: diff.append(str(i))
+      if len(diff):
+        print "diff on addr", hex(addr), "\n\tbits", ", ".join(diff)
 
 if __name__ == "__main__":
   if len(sys.argv) < 2:
