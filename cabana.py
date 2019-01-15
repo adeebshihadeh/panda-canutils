@@ -69,6 +69,24 @@ class Log:
           ret[addr][i] = 2 if ret[addr][i] != b else ret[addr][i]
     return ret
 
+  # same as get_bit_diff but only for a specified bus
+  def get_bit_diff_on_bus(self, addrs=None, bus=0):
+    log = self.get_full_log()
+    ret = {}
+    for time, addr, b, dat in log:
+      if b != bus or \
+        (addrs is not None and addr not in addrs):
+        continue
+      bits = get_bits(dat)
+      if addr not in ret:
+        ret[addr] = bits
+      else:
+        for i, b in enumerate(bits):
+          ret[addr][i] = 2 if ret[addr][i] != b else ret[addr][i]
+    return ret
+
+   
+
   def get_raw_lines(self):
     return self.csv.split("\n")
 
