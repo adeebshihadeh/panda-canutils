@@ -13,14 +13,14 @@ if __name__ == "__main__":
     exit(0)
 
   log = Log(open(sys.argv[1]).read())
-  
+
   bus = 0
   if "--bus" in sys.argv:
     bus = int(sys.argv.pop(sys.argv.index("--bus")+1))
     sys.argv.pop(sys.argv.index("--bus"))
   addrs = [int(n, 0) for n in sys.argv[2:]]
 
-  diff = log.get_bit_diff_on_bus(addrs, bus=bus)
+  diff = log.get_bit_diff_on_buses(addrs, buses=(bus))
   for k, v in diff.items():
     print(hex(k))
     for i in range(0, len(v), 8):

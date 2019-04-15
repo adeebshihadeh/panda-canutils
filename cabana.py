@@ -12,11 +12,9 @@ def get_bits(b):
 class Log:
   def __init__(self, csv):
     self.csv = csv
-
     csv = csv.split("\n")
     self.header = csv[0]
     self.data = csv[1:]
-
     self.parsed = None
 
   def get_header(self):
@@ -31,12 +29,12 @@ class Log:
       ret[msg[1]] = 1 + ret.get(msg[1], 0)
     return ret
 
-  # same as get_addrs() but only for specified bus
-  def get_addrs_on_bus(self, bus=0):
+  # same as get_addrs() but only for specified buses
+  def get_addrs_on_buses(self, buses=[0]):
     log = self.get_full_log()
     ret = {}
     for t, addr, b, _ in log:
-      if b == bus:
+      if b in buses:
         ret[addr] = 1 + ret.get(addr, 0)
     return ret
 
@@ -70,11 +68,11 @@ class Log:
     return ret
 
   # same as get_bit_diff but only for a specified bus
-  def get_bit_diff_on_bus(self, addrs=None, bus=0):
+  def get_bit_diff_on_buses(self, addrs=None, buses=[0]):
     log = self.get_full_log()
     ret = {}
     for time, addr, b, dat in log:
-      if b != bus or \
+      if b not in buses or \
         (addrs is not None and addr not in addrs):
         continue
       bits = get_bits(dat)
@@ -84,8 +82,6 @@ class Log:
         for i, b in enumerate(bits):
           ret[addr][i] = 2 if ret[addr][i] != b else ret[addr][i]
     return ret
-
-   
 
   def get_raw_lines(self):
     return self.csv.split("\n")
@@ -98,3 +94,5 @@ if __name__ == "__main__":
 
   log = Log(open("data/pcm_cancel.csv").read())
   print(log.get_bit_diff())
+
+
